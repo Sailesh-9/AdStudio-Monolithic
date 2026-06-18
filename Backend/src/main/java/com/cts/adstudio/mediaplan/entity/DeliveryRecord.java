@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 // editing the commit as new line
+// line 2 added for contrib addition
 // TEMPORARY entity for standalone pacing testing.
 // Replaced by Dev 4's delivery-service during integration.
 @Entity
