@@ -30,7 +30,6 @@ public class MediaLineItemController {
     }
 
     // LIST all line items under a plan
-    // GET /api/media-plans/{planId}/line-items
     @GetMapping("/api/media-plans/{planId}/line-items")
     public ResponseEntity<ApiResponse<List<MediaLineItemResponse>>> getByPlan(
             @PathVariable Integer planId) {
@@ -47,7 +46,6 @@ public class MediaLineItemController {
     }
 
     // UPDATE a line item
-    // PUT /api/line-items/{id}
     @PutMapping("/api/line-items/{id}")
     public ResponseEntity<ApiResponse<MediaLineItemResponse>> update(
             @PathVariable Integer id,

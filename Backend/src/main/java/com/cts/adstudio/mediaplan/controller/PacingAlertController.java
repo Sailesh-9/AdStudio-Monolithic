@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController("mediaplanPacingAlertController")
-@RequestMapping("/api/pacing-alerts")
-@RequiredArgsConstructor
+@RequestMapping("/api/pacing-alerts") 
+@RequiredArgsConstructor //builder needs it to create the object and then set the values
 public class PacingAlertController {
 
     private final PacingAlertService pacingAlertService;

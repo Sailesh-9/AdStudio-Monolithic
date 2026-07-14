@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-@Component
-@RequiredArgsConstructor
-@Slf4j
+@Component //generic spring bean
+@RequiredArgsConstructor //genereates constructor for final and nonnull fields for constructor dep injection
+@Slf4j //logger
 public class PacingAlertScheduler {
 
     private final PacingAlertService pacingAlertService;

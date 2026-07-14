@@ -17,7 +17,7 @@ public class DeliveryRecordController {
 
     private final DeliveryRecordService deliveryService;
 
-    // Record delivery data (later comes from Dev 4's service)
+    // Record delivery data
     @PostMapping("/api/delivery-records")
     public ResponseEntity<ApiResponse<DeliveryRecordResponse>> record(
             @Valid @RequestBody DeliveryRecordRequest request) {

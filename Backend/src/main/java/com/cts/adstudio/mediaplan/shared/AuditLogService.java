@@ -13,13 +13,6 @@ public class AuditLogService {
 
     private final MediaplanAuditLogRepository auditLogRepository;
 
-    /**
-     * Records an action in the audit log.
-     * @param userId     who performed the action
-     * @param action     what happened (e.g. "IO_STATUS_CHANGED_TO_Confirmed")
-     * @param entityType the entity type (e.g. "InsertionOrder")
-     * @param entityId   the ID of the affected record
-     */
     public void log(Integer userId, String action, String entityType, Integer entityId) {
         AuditLog entry = AuditLog.builder()
                 .userId(userId)

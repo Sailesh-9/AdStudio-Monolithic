@@ -20,7 +20,7 @@ public class MediaPlanController {
 
     private final MediaPlanService mediaPlanService;
 
-    @PostMapping
+    @PostMapping //to create a new media plan
     public ResponseEntity<ApiResponse<MediaPlanResponse>> create(
             @Valid @RequestBody MediaPlanRequest request) {
         MediaPlanResponse response = mediaPlanService.createMediaPlan(request);
@@ -28,26 +28,26 @@ public class MediaPlanController {
                 .body(ApiResponse.success("Media plan created successfully", response));
     }
 
-    @GetMapping
+    @GetMapping //to fetch all media plans with pagination 20 data per page
     public ResponseEntity<ApiResponse<PagedResponse<MediaPlanResponse>>> getAll(Pageable pageable) {
         return ResponseEntity.ok(
                 ApiResponse.success("Media plans fetched", mediaPlanService.getAllMediaPlans(pageable)));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") //to fetch a media plan by its ID
     public ResponseEntity<ApiResponse<MediaPlanResponse>> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(
                 ApiResponse.success("Media plan fetched", mediaPlanService.getMediaPlanById(id)));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") //to update a media plan by its ID
     public ResponseEntity<ApiResponse<MediaPlanResponse>> update(
             @PathVariable Integer id, @Valid @RequestBody MediaPlanRequest request) {
         return ResponseEntity.ok(
                 ApiResponse.success("Media plan updated", mediaPlanService.updateMediaPlan(id, request)));
     }
 
-    @PutMapping("/{id}/status")
+    @PutMapping("/{id}/status") //to update the status of a media plan by its ID
     public ResponseEntity<ApiResponse<MediaPlanResponse>> updateStatus(
             @PathVariable Integer id, @Valid @RequestBody StatusUpdateRequest request) {
         return ResponseEntity.ok(
@@ -55,7 +55,7 @@ public class MediaPlanController {
                         mediaPlanService.updateMediaPlanStatus(id, request.getStatus())));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") //to delete a media plan by its ID
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Integer id) {
         mediaPlanService.deleteMediaPlan(id);
         return ResponseEntity.ok(ApiResponse.success("Media plan deleted", null));

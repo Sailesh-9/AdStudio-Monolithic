@@ -83,7 +83,6 @@ public class MediaLineItemServiceImpl implements MediaLineItemService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Line Item not found with ID: " + lineItemId));
 
-        // BUDGET CHECK — exclude THIS line item's old budget from the running total
         validateBudgetWithinPlan(item.getMediaPlan(), request.getPlannedBudget(), lineItemId);
 
         item.setChannel(parseChannel(request.getChannel()));
@@ -128,8 +127,6 @@ public class MediaLineItemServiceImpl implements MediaLineItemService {
         lineItemRepository.deleteById(lineItemId);
     }
 
-    // ---- helpers ----
-
     private MediaLineItem.Channel parseChannel(String channelText) {
         try {
             return MediaLineItem.Channel.valueOf(channelText);
@@ -151,7 +148,7 @@ public class MediaLineItemServiceImpl implements MediaLineItemService {
     private void validateBudgetWithinPlan(MediaPlan plan, BigDecimal newBudget, Integer excludeId) {
         BigDecimal planBudget = plan.getTotalBudgetAllocated();
         if (planBudget == null) {
-            return; // plan has no budget cap set; skip the check
+            return; // plan has no budget cap set
         }
 
         // Sum the budgets of all EXISTING line items in this plan

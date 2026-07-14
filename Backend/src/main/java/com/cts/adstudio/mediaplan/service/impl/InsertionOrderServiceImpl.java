@@ -98,7 +98,7 @@ public class InsertionOrderServiceImpl implements InsertionOrderService {
         io.setStatus(status);
         InsertionOrder saved = ioRepository.save(io);
 
-        // AUDIT every IO status change (dev plan requirement)
+        // AUDIT every IO status change
         auditLogService.log(io.getPublisherId(),
                 "IO_STATUS_CHANGED_TO_" + newStatus,
                 "InsertionOrder", ioId);

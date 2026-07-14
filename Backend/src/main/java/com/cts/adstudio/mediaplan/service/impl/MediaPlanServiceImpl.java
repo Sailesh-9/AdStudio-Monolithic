@@ -49,7 +49,7 @@ public class MediaPlanServiceImpl implements MediaPlanService {
         return mapToResponse(plan);
     }
 
-    @Override
+    @Override //paginated response of media plans
     public PagedResponse<MediaPlanResponse> getAllMediaPlans(Pageable pageable) {
         return PaginationHelper.toPagedResponse(
                 mediaPlanRepository.findAll(pageable),

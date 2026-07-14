@@ -28,14 +28,10 @@ public class PacingAlertServiceImpl implements PacingAlertService {
     private final PacingAlertRepository pacingAlertRepository;
 
     // Thresholds from the dev plan
-    private static final double UNDER_DELIVERY_THRESHOLD = 80.0;
+    private static final double UNDER_DELIVERY_THRESHOLD = 80.0; 
     private static final double OVER_DELIVERY_THRESHOLD = 110.0;
     private static final long FLIGHT_END_WARNING_DAYS = 3;
 
-    /**
-     * The pacing engine. Checks every active line item and raises alerts.
-     * Runs daily (via the scheduler) and can also be triggered manually.
-     */
     @Override
     public int runPacingCheck() {
         LocalDate today = LocalDate.now();
@@ -46,13 +42,13 @@ public class PacingAlertServiceImpl implements PacingAlertService {
 
         for (MediaLineItem item : lineItems) {
             // Skip items that are completed or have no flight dates
-            if (item.getStatus() == MediaLineItem.LineItemStatus.Completed) continue;
-            if (item.getFlightStart() == null || item.getFlightEnd() == null) continue;
+            if (item.getStatus() == MediaLineItem.LineItemStatus.Completed) continue; // flight completed
+            if (item.getFlightStart() == null || item.getFlightEnd() == null) continue; // no flight dates
             if (today.isBefore(item.getFlightStart())) continue; // flight not started yet
 
             Integer lineItemId = item.getLineItemId();
 
-            // --- Gather delivery data (LATER: replace with Dev 4's service call) ---
+            // --- Gather delivery data ---
             long delivered = deliveryRepository.sumDeliveredImpressions(lineItemId);
             BigDecimal spend = deliveryRepository.sumSpend(lineItemId);
 
@@ -77,24 +73,24 @@ public class PacingAlertServiceImpl implements PacingAlertService {
             // --- 3 & 4. Under / Over delivery (needs impressions + flight progress) ---
             if (item.getPlannedImpressions() != null && item.getPlannedImpressions() > 0) {
                 long totalFlightDays = Math.max(1,
-                        ChronoUnit.DAYS.between(item.getFlightStart(), item.getFlightEnd()));
+                        ChronoUnit.DAYS.between(item.getFlightStart(), item.getFlightEnd())); // Ensure at least 1 day
                 long elapsedDays = Math.min(totalFlightDays,
-                        ChronoUnit.DAYS.between(item.getFlightStart(), today));
-                double flightProgress = (double) elapsedDays / totalFlightDays;
+                        ChronoUnit.DAYS.between(item.getFlightStart(), today)); // Ensure we don't exceed total flight days
+                double flightProgress = (double) elapsedDays / totalFlightDays; //formula: elapsed / total flight days
 
-                double expected = item.getPlannedImpressions() * flightProgress;
+                double expected = item.getPlannedImpressions() * flightProgress; //formula: planned * flight progress
 
-                if (expected > 0) {
+                if (expected > 0) { // Avoid division by zero
                     double pacing = (delivered * 100.0) / expected;
                     BigDecimal pacingPercent = BigDecimal.valueOf(pacing)
                             .setScale(2, RoundingMode.HALF_UP);
 
-                    if (pacing < UNDER_DELIVERY_THRESHOLD) {
+                    if (pacing < UNDER_DELIVERY_THRESHOLD) { // Under delivery
                         if (createAlertIfNotExists(lineItemId,
                                 PacingAlert.AlertType.UnderDelivery, pacingPercent, today)) {
                             alertsCreated++;
                         }
-                    } else if (pacing > OVER_DELIVERY_THRESHOLD) {
+                    } else if (pacing > OVER_DELIVERY_THRESHOLD) { // Over delivery
                         if (createAlertIfNotExists(lineItemId,
                                 PacingAlert.AlertType.OverDelivery, pacingPercent, today)) {
                             alertsCreated++;
@@ -144,13 +140,6 @@ public class PacingAlertServiceImpl implements PacingAlertService {
         return mapToResponse(pacingAlertRepository.save(alert));
     }
 
-    // ---- helpers ----
-
-    /**
-     * Creates an alert only if there isn't already an OPEN alert of the same
-     * type for this line item (avoids spamming duplicate alerts each run).
-     * Returns true if a new alert was created.
-     */
     private boolean createAlertIfNotExists(Integer lineItemId, PacingAlert.AlertType type,
                                            BigDecimal pacingPercent, LocalDate today) {
         boolean exists = pacingAlertRepository.existsByLineItemIdAndAlertTypeAndStatus(

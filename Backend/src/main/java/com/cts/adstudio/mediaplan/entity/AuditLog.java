@@ -4,10 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
-// Monolith note: IAM also defines an "AuditLog" entity mapped to "audit_log".
-// To coexist in a single persistence unit, this one uses a distinct JPA entity
-// name and table. No JPQL references this entity by name, so this is transparent
-// to the rest of the mediaplan module (the Java class name stays "AuditLog").
 @Entity(name = "MediaplanAuditLog")
 @Table(name = "mediaplan_audit_log")
 @Data
