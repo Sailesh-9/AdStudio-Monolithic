@@ -1,20 +1,24 @@
 package com.cts.adstudio.iam.security;
 
-import com.cts.adstudio.iam.entity.User;
-import com.cts.adstudio.iam.enums.UserStatus;
-import lombok.RequiredArgsConstructor;
+import java.util.Collection;
+import java.util.List;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import com.cts.adstudio.iam.entity.User;
+import com.cts.adstudio.iam.enums.UserStatus;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * Adapts our User entity to Spring Security's UserDetails contract.
  * Account status is mapped to enabled / non-locked flags.
+ *
  */
-@RequiredArgsConstructor
+
+@RequiredArgsConstructor                // UserDetails is interface from spring-security
 public class CustomUserDetails implements UserDetails {
 
     private final User user;

@@ -23,5 +23,5 @@ public class AuditLogRequest {
     private String action;
 
     @NotBlank(message = "entityType is required")
-    private String entityType;
+    private String entityType;  // table name
 }

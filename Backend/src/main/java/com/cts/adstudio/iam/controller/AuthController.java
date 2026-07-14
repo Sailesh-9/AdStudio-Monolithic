@@ -5,6 +5,7 @@ import com.cts.adstudio.iam.dto.request.RegisterRequest;
 import com.cts.adstudio.iam.dto.response.LoginResponse;
 import com.cts.adstudio.iam.dto.response.UserResponse;
 import com.cts.adstudio.iam.service.AuthService;
+import com.cts.adstudio.iam.service.impl.AuthServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

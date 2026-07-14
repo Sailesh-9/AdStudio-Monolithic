@@ -1,5 +1,11 @@
 package com.cts.adstudio.iam.service.impl;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.cts.adstudio.iam.dto.request.LoginRequest;
 import com.cts.adstudio.iam.dto.request.RegisterRequest;
 import com.cts.adstudio.iam.dto.response.LoginResponse;
@@ -11,13 +17,9 @@ import com.cts.adstudio.iam.repository.UserRepository;
 import com.cts.adstudio.iam.security.JwtService;
 import com.cts.adstudio.iam.service.AuditLogService;
 import com.cts.adstudio.iam.service.AuthService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -64,6 +66,16 @@ public class AuthServiceImpl implements AuthService {
     public LoginResponse login(LoginRequest request) {
         // Throws an AuthenticationException (handled globally) on bad credentials,
         // inactive (disabled) or suspended (locked) accounts.
+        
+
+        // this will automatically call the line 23 of com.cts.adstudio.iam.security.CustomUserDetailsService
+        /* 
+        You only need to plug in:
+            UserDetailsService
+            PasswordEncoder
+        remaining actions including password matching to DB also done by spring security by 
+        by the below line "authenticationManager.authenticate("
+        */
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
